@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import turtle
+import math
 from typing import Callable
 
 # So much math! It's like I'm back in school!
@@ -77,7 +78,6 @@ def draw_cross(graph_size: int):
 
 
 def draw_graph(incrs: int, func: Callable[[float], float], color: str = "black"):
-    turtle.setworldcoordinates(-incrs, -incrs, incrs, incrs)
     turtle.color(color)
     turtle.speed(0)
 
@@ -88,7 +88,6 @@ def draw_graph(incrs: int, func: Callable[[float], float], color: str = "black")
         x = step
         y = func(x)
         step += 0.5
-        print(f"f({x}) = {y}")
 
         if x > incrs :
             break
@@ -101,7 +100,10 @@ def draw_graph(incrs: int, func: Callable[[float], float], color: str = "black")
 
 
 def draw_button_callback(fun_text: str, graph_size_text: str):
-    turtle.title("[Atheris] Graphing...")
+    try:
+        turtle.title("[Atheris] Graph")
+    except turtle.Terminator:
+        turtle.title("[Atheris] Graph")
 
     try:
         size = int(graph_size_text)
@@ -110,17 +112,21 @@ def draw_button_callback(fun_text: str, graph_size_text: str):
         return
 
     try:
-        fun = eval(fun_text)
+        fun = eval(fun_text, {"sin": math.sin, "cos": math.cos, "tan": math.tan, "sqrt": math.sqrt})
         draw_cross(size)
         draw_graph(size, fun)
+
+    except turtle.Terminator:
+        turtle.bye()
+        return
+
     except Exception as e:
         turtle.bye()
         messagebox.showerror("Error while graphing", str(e))
         return
 
-    turtle.title("[Atheris] Graphing done!")
-
     turtle.exitonclick()
+    turtle.reset()
 
 
 def main():

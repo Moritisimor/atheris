@@ -74,20 +74,27 @@ def draw_cross(width: int, height: int):
     draw_axis_half(True, half_width, width)
 
 
-def draw_function_crosses(incrs: int, func: Callable[[float], float]):
+def draw_function_crosses(incrs: int, func: Callable[[float], float], color: str = "black"):
+    turtle.color(color)
     height = turtle.window_height()
     width = turtle.window_width()
 
     turtle.teleport((width / incrs) * -incrs, (height / incrs) * func(-incrs))
     step = -incrs
     while step < incrs:
-        step += 0.1
-        turtle.goto((width / incrs) * step, (height / incrs) * func(step))
+        step += 0.08
+        turtle.goto(((width / incrs) * step) * 2, ((height / incrs) * func(step)) * 2)
         turtle.write("x")
+
+    turtle.color("black")
 
 
 turtle.title("Atheris")
 turtle.speed(10000)
+
 draw_cross(4, 16)
-draw_function_crosses(4, lambda x: x * x)
+draw_function_crosses(4, lambda x: x, "red")
+draw_function_crosses(4, lambda x: x ** 2, "green")
+draw_function_crosses(4, lambda x: x ** 3, "blue")
+
 turtle.exitonclick()

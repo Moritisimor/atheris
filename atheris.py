@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 import turtle
+from typing import Callable
 
 # So much math! It's like I'm back in school!
-def draw_cross(incrs: int):
-    def draw_axis_half(negative: bool, half_size: float):
-        for i in range(1, incrs + 1):
+def draw_cross(width: int, height: int):
+    def draw_axis_half(negative: bool, half_size: float, steps: int):
+        for i in range(1, steps + 1):
             if negative:
                 turtle.right(90)
             else:
@@ -25,7 +26,7 @@ def draw_cross(incrs: int):
             else:
                 turtle.left(90)
         
-            turtle.forward(half_size / incrs)
+            turtle.forward(half_size / steps)
 
 
     half_height = turtle.window_height() / 2
@@ -39,40 +40,54 @@ def draw_cross(incrs: int):
     turtle.right(90)
 
     # Go one above the 0 for the upper y-axis
-    turtle.forward(half_height / incrs)
+    turtle.forward(half_height / height)
 
     # Draw upper y-axis
-    draw_axis_half(False, half_height)
+    draw_axis_half(False, half_height, height)
 
     # Go back home
     turtle.left(180)
     turtle.forward(half_height)
 
     # Two steps for the lower y-axis
-    turtle.forward((half_height / incrs) * 2)
+    turtle.forward((half_height / height) * 2)
 
     # Draw the lower y-axis
-    draw_axis_half(True, half_height)
+    draw_axis_half(True, half_height, height)
 
     # Go back home
     turtle.left(180)
     turtle.forward(half_height)
-    turtle.forward(half_height / incrs)
+    turtle.forward(half_height / height)
     turtle.right(90)
-    turtle.forward(half_width / incrs)
+    turtle.forward(half_width / width)
 
     # Draw right x-axis
-    draw_axis_half(False, half_width)
+    draw_axis_half(False, half_width, width)
 
     # Go back home
     turtle.left(180)
     turtle.forward(half_width)
-    turtle.forward((half_width / incrs) * 2)
+    turtle.forward((half_width / width) * 2)
 
     # Draw left x-axis
-    draw_axis_half(True, half_width)
+    draw_axis_half(True, half_width, width)
+
+
+def draw_function_crosses(incrs: int, func: Callable[[float], float]):
+    height = turtle.window_height()
+    width = turtle.window_width()
+
+    turtle.teleport((width / incrs) * -incrs, (height / incrs) * func(-incrs))
+    step = -incrs
+    while step < incrs:
+        step += 0.1
+        turtle.goto((width / incrs) * step, (height / incrs) * func(step))
+        turtle.write("x")
+
 
 turtle.title("Atheris")
 turtle.speed(10000)
-draw_cross(30)
+draw_cross(4, 16)
+draw_function_crosses(4, lambda x: x * x)
 turtle.exitonclick()
